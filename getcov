@@ -4,9 +4,16 @@
 #   Created by: Jon Reid, http://qualitycoding.org/
 #   Source: https://github.com/jonreid/XcodeCoverage
 #
+# Usage:
+#
+#   getcov <PROJECT_NAME> open|supress_open
+#
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${DIR}/envcov.sh
+
+LCOV_INFO=$1
+OPEN=$2
 
 remove_old_report()
 {
@@ -33,10 +40,18 @@ exclude_data()
 {
     LCOV --remove ${LCOV_INFO} "Developer/SDKs/*" -d "${OBJ_DIR}" -o ${LCOV_INFO}
     LCOV --remove ${LCOV_INFO} "main.m" -d "${OBJ_DIR}" -o ${LCOV_INFO}
-    # Remove other patterns here...
+    LCOV --remove ${LCOV_INFO} "FBTweak/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
+    LCOV --remove ${LCOV_INFO} "Mixpanel/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
+    LCOV --remove ${LCOV_INFO} "Intuit Animation Engine/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
+    LCOV --remove ${LCOV_INFO} "SSZipArchive/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
 }
 
 generate_report()
+{
+    "${LCOV_PATH}/genhtml" --output-directory . ${LCOV_INFO}
+}
+
+generate_and_open_report()
 {
     "${LCOV_PATH}/genhtml" --output-directory . ${LCOV_INFO}
     open index.html
@@ -47,3 +62,5 @@ enter_lcov_dir
 gather_coverage
 exclude_data
 generate_report
+
+[[ ${OPEN} == open ]] && generate_and_open_report || generate_report
