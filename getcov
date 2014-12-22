@@ -6,14 +6,14 @@
 #
 # Usage:
 #
-#   getcov <PROJECT_NAME> open|supress_open
+#   getcov <PROJECT_NAME> <REPORT_DIR>
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${DIR}/envcov.sh
 
-LCOV_INFO=$1
-OPEN=$2
+PROJECT_NAME=$1
+REPORT_DIR=$2
 
 remove_old_report()
 {
@@ -33,28 +33,24 @@ enter_lcov_dir()
 
 gather_coverage()
 {
-    LCOV --capture --derive-func-data -b "${SRCROOT}" -d "${OBJ_DIR}" -o ${LCOV_INFO}
+    LCOV --capture --derive-func-data -b "${SRCROOT}" -d "${OBJ_DIR}" -o ${PROJECT_NAME}
 }
 
 exclude_data()
 {
-    LCOV --remove ${LCOV_INFO} "Developer/SDKs/*" -d "${OBJ_DIR}" -o ${LCOV_INFO}
-    LCOV --remove ${LCOV_INFO} "main.m" -d "${OBJ_DIR}" -o ${LCOV_INFO}
-    LCOV --remove ${LCOV_INFO} "FBTweak/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
-    LCOV --remove ${LCOV_INFO} "Mixpanel/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
-    LCOV --remove ${LCOV_INFO} "Intuit Animation Engine/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
-    LCOV --remove ${LCOV_INFO} "SSZipArchive/*" -d "{OBJ_DIR}" -o ${LCOV_INFO}
+    LCOV --remove ${PROJECT_NAME} "Developer/SDKs/*" -d "${OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "main.m" -d "${OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "FBTweak/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "Mixpanel/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "Intuit Animation Engine/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "SSZipArchive/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
 }
 
 generate_report()
 {
-    "${LCOV_PATH}/genhtml" --output-directory . ${LCOV_INFO}
-}
-
-generate_and_open_report()
-{
-    "${LCOV_PATH}/genhtml" --output-directory . ${LCOV_INFO}
-    open index.html
+    "${LCOV_PATH}/genhtml" --output-directory . ${PROJECT_NAME}
+    mkdir -p ${REPORT_DIR}
+    cp -R ../lcov/* ${REPORT_DIR}
 }
 
 remove_old_report
@@ -62,5 +58,3 @@ enter_lcov_dir
 gather_coverage
 exclude_data
 generate_report
-
-[[ ${OPEN} == open ]] && generate_and_open_report || generate_report
