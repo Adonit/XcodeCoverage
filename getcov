@@ -48,9 +48,7 @@ exclude_data()
 
 generate_report()
 {
-    "${LCOV_PATH}/genhtml" --output-directory . ${PROJECT_NAME}
-    mkdir -p ${REPORT_DIR}
-    cp -R ../lcov/* ${REPORT_DIR}
+    "${LCOV_PATH}/genhtml" --output-directory ${REPORT_DIR} ${PROJECT_NAME}
 }
 
 remove_old_report
