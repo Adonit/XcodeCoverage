@@ -47,6 +47,7 @@ exclude_data()
     LCOV --remove ${PROJECT_NAME} "pop/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
     LCOV --remove ${PROJECT_NAME} "XcodeDefault.xctoolchain/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
     LCOV --remove ${PROJECT_NAME} "Shopify/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
+    LCOV --remove ${PROJECT_NAME} "FMDB/*" -d "{OBJ_DIR}" -o ${PROJECT_NAME}
 }
 
 generate_report()
